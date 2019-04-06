@@ -1,56 +1,47 @@
-# To enable ProGuard in your project, edit project.properties
-# to define the proguard.config property as described in that file.
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in ${sdk.dir}/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the ProGuard
-# include property in project.properties.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+## Add any project specific keep options here:
 
-# Add any project specific keep options here:
 #-dontshrink
 #-dontoptimize
 #-dontobfuscate
+## If your project uses WebView with JS, uncomment the following
+## and specify the fully qualified class name to the JavaScript interface
+## class:
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
 #-keepclassmembers class android.webkit.WebView {
-#   public *;
+## public *;
+
 #}
 
-#-injars      bin/classes
-#-injars      libs
-#-outjars     bin/classes-processed.jar
+#-injars bin/classes
+#-injars libs
+#-outjars bin/classes-processed.jar
+## Using Google's License Verification Library
 
-# Using Google's License Verification Library 
 -keep class com.android.vending.licensing.ILicensingService
+## Specifies to write out some more information during processing.
+## If the program terminates with an exception, this option will print out the entire stack trace, instead of just the exception message.
 
-# Specifies to write out some more information during processing. 
-# If the program terminates with an exception, this option will print out the entire stack trace, instead of just the exception message.
 -verbose
+## Annotations are represented by attributes that have no direct effect on the execution of the code.
 
-# Annotations are represented by attributes that have no direct effect on the execution of the code. 
--keepattributes *Annotation*
+-keepattributes Annotation
 
 -keepclassmembers enum * {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
+public static **[] values();
+public static ** valueOf(java.lang.String);
 }
 
 -keepattributes InnerClasses
 -keep class **.R
--keep class **.R$* {
-    <fields>;
+-keep class *.R$ {
+;
 }
+## These options let obfuscated applications or libraries produce stack traces that can still be deciphered later on
 
-# These options let obfuscated applications or libraries produce stack traces that can still be deciphered later on 
--renamesourcefileattribute SourceFile    
+-renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
+## Enable proguard with Cordova
 
-# Enable proguard with Cordova
 -keep class org.apache.cordova.** { *; }
 -keep public class * extends org.apache.cordova.CordovaPlugin
 
@@ -73,34 +64,34 @@
 -dontnote org.apache.harmony.xnet.provider.jsse.NativeCrypto
 -dontnote sun.misc.Unsafe
 
--keep class com.worklight.androidgap.push.** { *; }
--keep class com.worklight.wlclient.push.** { *; }
+-keep class com.worklight.androidgap.push.** { ; }
+-keep class com.worklight.wlclient.push.* { *; }
+## Enable proguard with Google libs
 
-# Enable proguard with Google libs
--keep class com.google.** { *; }
--dontwarn com.google.common.**
+-keep class com.google.** { ; }
+-dontwarn com.google.common.*
 -dontwarn com.google.ads.**
+## apache.http
 
-# apache.http
 -optimizations !class/merging/vertical*,!class/merging/horizontal*,!code/simplification/arithmetic,!field/*,!code/allocation/variable
 
--keep class net.sqlcipher.** { *; }
--dontwarn net.sqlcipher.**
+-keep class net.sqlcipher.** { ; }
+-dontwarn net.sqlcipher.*
 
 -keep class org.codehaus.** { *; }
--keepattributes *Annotation*,EnclosingMethod
+-keepattributes Annotation,EnclosingMethod
 
 -keepclassmembers enum * {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
+public static **[] values();
+public static ** valueOf(java.lang.String);
 }
+## Remove debug logs in release build
 
-# Remove debug logs in release build
 -assumenosideeffects class android.util.Log {
-    public static *** d(...);
+public static *** d(...);
 }
+## These classes contain references to external jars which are not included in the default MobileFirst project.
 
-# These classes contain references to external jars which are not included in the default MobileFirst project.
 -dontwarn com.worklight.common.internal.WLTrusteerInternal*
 -dontwarn com.worklight.jsonstore.**
 -dontwarn org.codehaus.jackson.map.ext.*
@@ -110,3 +101,40 @@
 -dontwarn android.support.v4.**
 -dontwarn android.net.SSLCertificateSocketFactory
 -dontwarn android.net.http.*
+## These clases contain references to google maps
+
+-keep class plugin.google.maps.** { ; }
+-keep public class * extends plugin.google.maps.MyPlugin
+-keepclassmembers public class plugin.google.maps.GoogleMaps {; }
+-keepclassmembers public class * extends plugin.google.maps.MyPlugin { *; }
+## References with google services
+
+-keep class org.gradle.api.** { ; }
+-keep interface org.gradle.api.* { *; }
+
+-keep class groovy.lang.** { ; }
+-keep interface groovy.lang.* { *; }
+
+-keep class sun.misc.** { ; }
+-keep interface sun.misc.* { *; }
+
+-keep class org.codehaus.groovy.runtime.** { ; }
+-keep interface org.codehaus.groovy.runtime.* { *; }
+
+-keep class org.codehaus.groovy.reflection.** { ; }
+-keep interface org.codehaus.groovy.reflection.* { *; }
+
+-keep class com.google.gson.** { ; }
+-keep interface com.google.gson.* { *; }
+## JSR 305 annotations are for embedding nullability information.
+
+-dontwarn javax.annotation.**
+## A resource is loaded with a relative path so the package of this class must be preserved.
+
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+## Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+## OkHttp platform used only on JVM and when Conscrypt dependency is available.
+
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
